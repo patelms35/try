@@ -6,7 +6,10 @@ import Profile from './pages/Profile';
 import RewardPoints from './pages/RewardPoints';
 import History from './pages/History';
 import PriceEstimation from './pages/PriceEstimation';
+import MyListings from './pages/MyListings';
+import ProductDetail from './pages/ProductDetail';
 import './styles/index.css';
+import './styles/listings.css';
 
 function App() {
   return (
@@ -18,6 +21,8 @@ function App() {
           <Route path="reward-points" element={<RewardPoints />} />
           <Route path="history" element={<History />} />
           <Route path="estimate-price" element={<PriceEstimation />} />
+          <Route path="my-listings" element={<MyListings />} />
+          <Route path="listing/:id" element={<ProductDetail />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

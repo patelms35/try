@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaBox, FaMoneyBillWave, FaTrophy, FaArrowRight, FaPencilAlt, 
          FaArrowUp, FaArrowDown, FaUserCircle } from 'react-icons/fa';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import '../styles/dashboard.css';
 
 const Dashboard = () => {
@@ -23,6 +24,13 @@ const Dashboard = () => {
     { id: 3, name: 'Emily Davis', points: 870, img: null },
     { id: 4, name: 'John Doe', points: 750, img: null },
     { id: 5, name: 'Robert Wilson', points: 620, img: null }
+  ];
+
+  // Pie chart data
+  const pieChartData = [
+    { name: 'Completed Sales', value: 47, color: '#10b981' },
+    { name: 'Pending Orders', value: 32, color: '#f59e0b' },
+    { name: 'Active Listings', value: 21, color: '#4a6cfa' }
   ];
 
   return (
@@ -63,6 +71,36 @@ const Dashboard = () => {
           <div className="stat-percentage down">
             <FaArrowDown />
             <span>3% from last month</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Pie Chart Section */}
+      <div className="pie-chart-section" style={{ width: '598px', height: '430px', margin: '2rem auto' }}>
+        <div className="chart-card" style={{ width: '100%', height: '100%' }}>
+          <div className="chart-header">
+            <h3>Sales Status Overview</h3>
+          </div>
+          <div style={{ width: '100%', height: '350px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={120}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

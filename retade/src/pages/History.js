@@ -1,35 +1,52 @@
-import React, { useState } from 'react';
-import { FaCalendarAlt, FaTag, FaCheckCircle, FaClock, FaEye, FaSearch, FaFilter } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaCalendarAlt, FaTag, FaCheckCircle, FaClock, FaEye, FaSearch, FaFilter, FaTimes, FaRupeeSign, FaMapMarkerAlt, FaStar, FaUser, FaPhone, FaHeart } from 'react-icons/fa';
 import '../styles/dashboard.css';
+import '../styles/history.css';
 
 const History = () => {
-  // Tabs state
-  const [activeTab, setActiveTab] = useState('posted');
-  
-  // Search and filter states
+  // Filter and search states
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   
   // Product detail modal
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   
-  // Mock product data
-  const postedProducts = [
+  // Enhanced product data - Showing 3 products
+  const allProducts = [
     {
       id: 1,
       name: 'iPhone 12 Pro Max',
       category: 'Mobile Phones',
       price: 65000,
-      estimatedPrice: 62000,
+      originalPrice: 129900,
       postedDate: '2023-05-10',
-      status: 'pending',
-      image: 'https://via.placeholder.com/150',
-      description: 'Used iPhone 12 Pro Max 256GB in good condition.',
+      soldDate: null,
+      status: 'active',
+      image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop',
+      description: 'Used iPhone 12 Pro Max 256GB in excellent condition with minimal signs of wear. Includes original box and charger.',
+      condition: 'Like New',
+      warranty: '6 months seller warranty',
+      location: 'Mumbai, Maharashtra',
+      views: 145,
+      likes: 23,
+      specifications: {
+        'Storage': '256GB',
+        'Color': 'Pacific Blue',
+        'Battery Health': '85%',
+        'RAM': '6GB',
+        'Camera': '12MP Triple Camera'
+      },
+      seller: {
+        name: 'Rahul Sharma',
+        phone: '+91 98765 43210',
+        rating: 4.5
+      },
       technician: {
         visitDate: '2023-05-15',
-        time: '1:00 PM - 2:00 PM',
-        report: 'Device is in good condition with minor scratches on the back. Battery health at 85%.'
+        rating: 4.5,
+        report: 'Device is in excellent condition with minor scratches on the back. Battery health at 85%. All functions working perfectly.'
       }
     },
     {
@@ -37,15 +54,33 @@ const History = () => {
       name: 'MacBook Pro 2019',
       category: 'Laptops',
       price: 110000,
-      estimatedPrice: 105000,
+      originalPrice: 199900,
       postedDate: '2023-04-25',
+      soldDate: '2023-05-02',
       status: 'sold',
-      image: 'https://via.placeholder.com/150',
-      description: 'MacBook Pro 2019 13-inch with 16GB RAM and 512GB SSD.',
+      image: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop',
+      description: 'MacBook Pro 2019 13-inch with 16GB RAM and 512GB SSD. Perfect for professionals and students.',
+      condition: 'Excellent',
+      warranty: '3 months seller warranty',
+      location: 'Delhi, India',
+      views: 287,
+      likes: 45,
+      specifications: {
+        'RAM': '16GB',
+        'Storage': '512GB SSD',
+        'Processor': 'Intel Core i5',
+        'Screen Size': '13.3 inch',
+        'Graphics': 'Intel Iris Plus'
+      },
+      seller: {
+        name: 'Priya Singh',
+        phone: '+91 87654 32109',
+        rating: 5.0
+      },
       technician: {
         visitDate: '2023-04-28',
-        time: '3:00 PM - 4:00 PM',
-        report: 'Laptop is in excellent condition. Battery cycle count is 230.'
+        rating: 5.0,
+        report: 'Laptop is in excellent condition. Battery cycle count is 230. All ports and keyboard working perfectly.'
       }
     },
     {
@@ -53,50 +88,60 @@ const History = () => {
       name: 'Samsung Galaxy S21',
       category: 'Mobile Phones',
       price: 45000,
-      estimatedPrice: 42000,
+      originalPrice: 79999,
       postedDate: '2023-05-05',
-      status: 'pending',
-      image: 'https://via.placeholder.com/150',
-      description: 'Samsung Galaxy S21 128GB in great condition.',
+      soldDate: null,
+      status: 'active',
+      image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop',
+      description: 'Samsung Galaxy S21 128GB in great condition with original box and all accessories included.',
+      condition: 'Good',
+      warranty: '4 months seller warranty',
+      location: 'Bangalore, Karnataka',
+      views: 92,
+      likes: 12,
+      specifications: {
+        'Storage': '128GB',
+        'Color': 'Phantom Gray',
+        'Battery Health': '92%',
+        'RAM': '8GB',
+        'Camera': '64MP Triple Camera'
+      },
+      seller: {
+        name: 'Amit Patel',
+        phone: '+91 76543 21098',
+        rating: 4.8
+      },
       technician: {
         visitDate: '2023-05-08',
-        time: '11:00 AM - 12:00 PM',
+        rating: 4.8,
         report: 'Phone is in very good condition. Screen has a tempered glass protector. Battery health at 92%.'
-      }
-    },
-    {
-      id: 4,
-      name: 'Canon EOS 80D',
-      category: 'Cameras',
-      price: 70000,
-      estimatedPrice: 68000,
-      postedDate: '2023-04-15',
-      status: 'sold',
-      image: 'https://via.placeholder.com/150',
-      description: 'Canon EOS 80D DSLR Camera with 18-135mm lens.',
-      technician: {
-        visitDate: '2023-04-18',
-        time: '2:00 PM - 3:00 PM',
-        report: 'Camera is in excellent condition. Shutter count is approximately 12,500.'
       }
     }
   ];
   
-  const soldProducts = postedProducts.filter(product => product.status === 'sold');
-  
-  // Filter displayed products based on search term and filter
+  // Filter products based on current filters
   const getFilteredProducts = () => {
-    let filtered = activeTab === 'posted' ? postedProducts : soldProducts;
+    let filtered = [...allProducts];
     
+    // Filter by search term
     if (searchTerm.trim() !== '') {
       filtered = filtered.filter(product => 
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+        product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.location.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
-    if (filter !== 'all') {
-      filtered = filtered.filter(product => product.category.toLowerCase() === filter.toLowerCase());
+    // Filter by category
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter(product => 
+        product.category.toLowerCase() === categoryFilter.toLowerCase()
+      );
+    }
+    
+    // Filter by status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(product => product.status === statusFilter);
     }
     
     return filtered;
@@ -106,151 +151,288 @@ const History = () => {
   const handleProductClick = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
+    document.body.style.overflow = 'hidden';
   };
   
   // Close modal
   const closeModal = () => {
     setShowModal(false);
+    setSelectedProduct(null);
+    document.body.style.overflow = 'unset';
   };
   
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchTerm('');
+    setCategoryFilter('all');
+    setStatusFilter('all');
+  };
+  
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+  
+  const calculateDiscount = (original, current) => {
+    return Math.round((1 - current / original) * 100);
+  };
+
+  const filteredProducts = getFilteredProducts();
+  const totalProducts = allProducts.length;
+  const activeProducts = allProducts.filter(p => p.status === 'active').length;
+  const soldProducts = allProducts.filter(p => p.status === 'sold').length;
+
   return (
-    <div className="history-container">
-      <h1 className="mb-3">Product History</h1>
-      
-      {/* Tabs */}
-      <div className="tabs">
-        <div className="tabs-list">
-          <div 
-            className={`tab-item ${activeTab === 'posted' ? 'active' : ''}`}
-            onClick={() => setActiveTab('posted')}
-          >
-            Posted Products
+    <div className="history-page">
+      {/* Header Section */}
+      <div className="history-header">
+        <div className="header-content">
+          <h1 className="page-title">Product History</h1>
+          <p className="page-subtitle">Manage your posted and sold products</p>
+        </div>
+        <div className="stats-overview">
+          <div className="stat-card">
+            <span className="stat-number">{totalProducts}</span>
+            <span className="stat-label">Total Products</span>
           </div>
-          <div 
-            className={`tab-item ${activeTab === 'sold' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sold')}
-          >
-            Sold Products
+          <div className="stat-card">
+            <span className="stat-number">{activeProducts}</span>
+            <span className="stat-label">Active</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{soldProducts}</span>
+            <span className="stat-label">Sold</span>
           </div>
         </div>
       </div>
       
-      {/* Filter Bar */}
-      <div className="filter-bar">
-        <div className="search-group">
-          <div className="input-group" style={{ position: 'relative' }}>
-            <input 
-              type="text" 
-              className="search-input" 
-              placeholder="Search products..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <FaSearch style={{ position: 'absolute', right: '10px', top: '10px', color: '#6c757d' }} />
-          </div>
+      {/* Filter Section */}
+      <div className="filter-section">
+        <div className="search-container">
+          <FaSearch className="search-icon" />
+          <input 
+            type="text" 
+            className="search-input" 
+            placeholder="Search products..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button className="clear-search" onClick={() => setSearchTerm('')}>
+              <FaTimes />
+            </button>
+          )}
         </div>
         
-        <div className="filter-group">
-          <div className="filter-label">
-            <FaFilter style={{ marginRight: '0.5rem' }} />
-            <span>Category:</span>
-          </div>
+        <div className="filter-controls">
           <select 
             className="filter-select" 
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="all">All Categories</option>
             <option value="mobile phones">Mobile Phones</option>
             <option value="laptops">Laptops</option>
             <option value="cameras">Cameras</option>
             <option value="tablets">Tablets</option>
-            <option value="audio">Audio Devices</option>
+            <option value="audio">Audio</option>
           </select>
+          
+          <select 
+            className="filter-select" 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="sold">Sold</option>
+          </select>
+          
+          <button className="clear-filters-btn" onClick={clearFilters}>
+            Clear Filters
+          </button>
         </div>
       </div>
       
-      {/* Product Grid */}
-      <div className="product-grid">
-        {getFilteredProducts().length > 0 ? (
-          getFilteredProducts().map(product => (
-            <div 
-              key={product.id} 
-              className="product-card" 
-              onClick={() => handleProductClick(product)}
-            >
-              <img src={product.image} alt={product.name} className="product-img" />
-              <div className="product-info">
-                <h3 className="product-title">{product.name}</h3>
-                <div className="product-meta">
-                  <div>
-                    <FaCalendarAlt />
-                    <span>Posted: {product.postedDate}</span>
+      {/* Products Grid */}
+      <div className="products-container">
+        {filteredProducts.length > 0 ? (
+          <div className="products-grid">
+            {filteredProducts.map(product => (
+              <div 
+                key={product.id} 
+                className="product-card" 
+                onClick={() => handleProductClick(product)}
+              >
+                <div className="product-image-container">
+                  <img src={product.image} alt={product.name} className="product-image" />
+                  <div className="product-overlay">
+                    <span className="view-details">View Details</span>
                   </div>
                 </div>
-                <div className="product-meta">
-                  <div>
-                    <FaTag />
-                    <span>{product.category}</span>
+                
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  
+                  <div className="product-meta">
+                    <div className="meta-row">
+                      <FaCalendarAlt className="meta-icon" />
+                      <span>{formatDate(product.postedDate)}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="product-price">₹{product.price.toLocaleString()}</div>
-                <div className="product-badges">
-                  {product.status === 'pending' ? (
-                    <span className="badge badge-warning">
-                      <FaClock />
-                      <span>Pending</span>
-                    </span>
-                  ) : (
-                    <span className="badge badge-success">
-                      <FaCheckCircle />
-                      <span>Sold</span>
-                    </span>
-                  )}
-                  <span className="badge badge-primary">
-                    <FaEye />
-                    <span>View Details</span>
-                  </span>
+                  
+                  <div className="price-section">
+                    <div className="current-price">
+                      <FaRupeeSign />
+                      <span>{product.price.toLocaleString()}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
-          <div className="no-products">
-            <p>No products found.</p>
+          <div className="empty-state">
+            <div className="empty-icon">📦</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your search criteria or clear the filters</p>
+            <button className="clear-filters-btn" onClick={clearFilters}>
+              Clear All Filters
+            </button>
           </div>
         )}
       </div>
       
-      {/* Product Detail Modal */}
+      {/* Product Details Modal */}
       {showModal && selectedProduct && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeModal}>
+              <FaTimes />
+            </button>
+            
             <div className="modal-header">
-              <h2>{selectedProduct.name}</h2>
-              <button className="modal-close" onClick={closeModal}>×</button>
-            </div>
-            <div className="modal-body">
-              <div className="product-detail-grid">
-                <div className="product-image-container">
-                  <img src={selectedProduct.image} alt={selectedProduct.name} className="product-detail-img" />
+              <div className="product-image-section">
+                <img 
+                  src={selectedProduct.image} 
+                  alt={selectedProduct.name} 
+                  className="modal-product-image" 
+                />
+                <div className="image-badges">
+                  <span className={`status-badge ${selectedProduct.status}`}>
+                    {selectedProduct.status === 'sold' ? 'Sold' : 'Active'}
+                  </span>
+                  <span className="condition-badge">{selectedProduct.condition}</span>
                 </div>
-                <div className="product-detail-info">
-                  <div className="detail-group">
-                    <h3>Product Details</h3>
-                    <p><strong>Category:</strong> {selectedProduct.category}</p>
-                    <p><strong>Posted Date:</strong> {selectedProduct.postedDate}</p>
-                    <p><strong>Status:</strong> {selectedProduct.status === 'pending' ? 'Pending' : 'Sold'}</p>
-                    <p><strong>Price:</strong> ₹{selectedProduct.price.toLocaleString()}</p>
-                    <p><strong>Estimated Price:</strong> ₹{selectedProduct.estimatedPrice.toLocaleString()}</p>
-                    <p><strong>Description:</strong> {selectedProduct.description}</p>
+              </div>
+              
+              <div className="product-details-section">
+                <h2 className="modal-product-name">{selectedProduct.name}</h2>
+                
+                <div className="modal-price-section">
+                  <div className="modal-current-price">
+                    <FaRupeeSign />
+                    <span>{selectedProduct.price.toLocaleString()}</span>
                   </div>
-                  
-                  <div className="detail-group">
-                    <h3>Technician Visit</h3>
-                    <p><strong>Date:</strong> {selectedProduct.technician.visitDate}</p>
-                    <p><strong>Time:</strong> {selectedProduct.technician.time}</p>
-                    <p><strong>Report:</strong> {selectedProduct.technician.report}</p>
+                  <div className="modal-price-details">
+                    <span className="modal-original-price">
+                      MRP: ₹{selectedProduct.originalPrice.toLocaleString()}
+                    </span>
+                    <span className="modal-discount">
+                      {calculateDiscount(selectedProduct.originalPrice, selectedProduct.price)}% off
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="product-description">
+                  <h4>Description</h4>
+                  <p>{selectedProduct.description}</p>
+                </div>
+                
+                <div className="product-info-grid">
+                  <div className="info-item">
+                    <span className="info-label">Category:</span>
+                    <span className="info-value">{selectedProduct.category}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Location:</span>
+                    <span className="info-value">{selectedProduct.location}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Posted:</span>
+                    <span className="info-value">{formatDate(selectedProduct.postedDate)}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Warranty:</span>
+                    <span className="info-value">{selectedProduct.warranty}</span>
+                  </div>
+                  {selectedProduct.soldDate && (
+                    <div className="info-item">
+                      <span className="info-label">Sold Date:</span>
+                      <span className="info-value">{formatDate(selectedProduct.soldDate)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="modal-body">
+              <div className="modal-section">
+                <h4>Specifications</h4>
+                <div className="specifications-grid">
+                  {Object.entries(selectedProduct.specifications).map(([key, value]) => (
+                    <div key={key} className="spec-item">
+                      <span className="spec-label">{key}:</span>
+                      <span className="spec-value">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="modal-section">
+                <h4>Seller Information</h4>
+                <div className="seller-info">
+                  <div className="seller-details">
+                    <div className="seller-item">
+                      <FaUser className="seller-icon" />
+                      <span>{selectedProduct.seller.name}</span>
+                    </div>
+                    <div className="seller-item">
+                      <FaPhone className="seller-icon" />
+                      <span>{selectedProduct.seller.phone}</span>
+                    </div>
+                    <div className="seller-item">
+                      <FaStar className="seller-icon" />
+                      <span>{selectedProduct.seller.rating}/5 Rating</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-section">
+                <h4>Technician Report</h4>
+                <div className="technician-report">
+                  <div className="report-header">
+                    <span>Visit Date: {selectedProduct.technician.visitDate}</span>
+                    <div className="technician-rating">
+                      <FaStar />
+                      <span>{selectedProduct.technician.rating}/5</span>
+                    </div>
+                  </div>
+                  <p className="report-text">{selectedProduct.technician.report}</p>
+                </div>
+              </div>
+              
+              <div className="modal-section">
+                <h4>Product Performance</h4>
+                <div className="performance-stats">
+                  <div className="performance-item">
+                    <FaEye className="performance-icon" />
+                    <span>{selectedProduct.views} Views</span>
+                  </div>
+                  <div className="performance-item">
+                    <FaHeart className="performance-icon" />
+                    <span>{selectedProduct.likes} Likes</span>
                   </div>
                 </div>
               </div>
@@ -262,4 +444,4 @@ const History = () => {
   );
 };
 
-export default History; 
+export default History;
